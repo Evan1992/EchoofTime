@@ -1,0 +1,15 @@
+.today_plans {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px, rgba(0, 0, 0, 0.08) 0px 2px 8px;
+    margin-left:  15%;
+    margin-right: 15%;
+    margin-top: 2%;
+}
+
+.today_plans_title {
+    font-size: 20px;
+    font-weight: 1000;
+    padding: 8px;
+    border-bottom: 1px solid #e8e8e8;
+}
