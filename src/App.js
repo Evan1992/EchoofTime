@@ -6,7 +6,6 @@ import React, { Component } from 'react'
 import './App.css'
 import Year from './components/Years/Year/Year'
 import LongTermPlan  from './components/LongTermPlan/LongTermPlan'
-import ShortTermPlans from './components/ShortTermPlans/ShortTermPlans'
 import TodayPlans    from './components/TodayPlans/TodayPlans'
 
 // import axios from './axios'
@@ -71,7 +70,6 @@ class App extends Component{
           })}
         </div>
 
-        <div><ShortTermPlans /></div>
         <div><TodayPlans /></div>
 
       </div>

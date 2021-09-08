@@ -110,7 +110,7 @@ class TodayPlans extends Component {
         today_plans = (
             <div className={classes.today_plans}>
                 <div className={classes.today_plans_title}>
-                    Today Plan({this.state.today_month}/{this.state.today_date}/{this.state.today_year})
+                    Today's Plan({this.state.today_month}/{this.state.today_date}/{this.state.today_year})
                     <button onClick={this.endTodayPlanHandler}>End</button>
                 </div>
                 {/* Show exsiting plans of today */}
@@ -215,6 +215,7 @@ class TodayPlans extends Component {
 
     postDataHandler = (event) =>{
         /* Post new added today_plan data to database */
+        console.log(this.state.today_plan);
         axios.post(`/today-plan/${this.state.today_date}-${this.state.today_month}-${this.state.today_year}.json`, this.state.today_plan)
             .then(response =>{
                 console.log(response)
