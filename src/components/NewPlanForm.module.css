@@ -1,0 +1,7 @@
+.control input {
+    background:lightgray;
+}
+
+.control input:focus {
+    background: white;
+}
