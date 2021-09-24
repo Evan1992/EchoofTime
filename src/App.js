@@ -1,5 +1,5 @@
 import './App.css';
-import Plans from './components/Plans'
+import Plans from './components/Plans/Plans'
 
 function App() {
   // return (

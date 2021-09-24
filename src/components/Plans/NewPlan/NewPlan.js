@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 
 /* ========== import other libraries ========== */
-import axios from '../axios'
+import axios from '../../../axios'
 
 /* ========== import react components ========== */
 import NewPlanForm from './NewPlanForm'
@@ -62,6 +62,7 @@ class NewPlan extends Component {
             children: {},
             seconds: 0
         }
+
         axios.post(`/plans.json`, target)
         .then(response => {
             console.log(response)
