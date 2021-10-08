@@ -8,10 +8,44 @@
 
 .plan_title {
     float:left;
+    width:60%;
 }
 
-.plan_button{
+.plan_seconds {
+    float:left;
+    width:10%;
+    color: gray;
+}
+
+.plan_right_buttons{
+    float:right;
+}
+
+.plan_clock_button{
+    width:20px;
+    height:20px;
+}
+
+.plan_add_button{
     float:right;
     color: gray;
+}
+
+.plan_left_button{
+    float:left;
+    color: gray;
+    width: 20px;
+    height: 20px;
+}
+
+.plan_left_button_img{
+    width: 35%;
+    height: 35%;
+}
+
+.plan_left_button_img:hover{
+    filter: opacity(0.3);
+    width: 45%;
+    height: 45%;
 }
 

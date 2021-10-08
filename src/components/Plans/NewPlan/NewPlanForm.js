@@ -14,6 +14,18 @@ const NewPlanForm = (props) => {
      */
     const input_plan = useRef();
     
+    const getPlanHandler = () => {
+        axios.get(`/plans.json`)
+        .then(response => {
+            console.log("get2")
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+    
+    
     /* ========== Methods ========== */
     const postPlanHandler = () => {
         const target = {
@@ -25,9 +37,10 @@ const NewPlanForm = (props) => {
             children: {},
             seconds: 0
         }
-
+        
         axios.post(`/plans.json`, target)
         .then(response => {
+            console.log("post")
             console.log(response)
             
             axios.put(`/active_plans/${response.data.name}.json`, true)
@@ -55,7 +68,7 @@ const NewPlanForm = (props) => {
     return(
         <form className={classes.control}>
             <input type="text" ref={input_plan} />
-            <button onClick={postPlanHandler}>Add</button>
+            <button onClick={getPlanHandler}>Add</button>
             <button onClick={props.form_toggler}>Cancel</button>
         </form>
     )

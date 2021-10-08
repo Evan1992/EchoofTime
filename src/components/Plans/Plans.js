@@ -12,7 +12,10 @@ class Plans extends Component {
         isLoading : true
     }
     
-    g_state = {}
+    g_state = {
+        plan_in_progress: null,
+        plan_start_timestamp: 0
+    }
 
     /* ========== Lifecycle ========== */
     componentDidMount() {

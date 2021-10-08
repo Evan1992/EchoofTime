@@ -19,6 +19,8 @@ class NewPlan extends Component {
             return (
                 <NewPlanForm
                     form_toggler={this.formToggleHandler}
+                    parent=""
+                    rank={0}
                 />
             );
         } else {
