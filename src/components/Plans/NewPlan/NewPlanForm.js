@@ -12,37 +12,28 @@ const NewPlanForm = (props) => {
      * @note
      * useRef() hook will help avoid the redundant calls to setState() and re-render the page for every keystroke
      */
-    const input_plan = useRef();
-    
-    const getPlanHandler = () => {
-        axios.get(`/plans.json`)
-        .then(response => {
-            console.log("get2")
-            console.log(response)
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    }
-    
+    var input_plan = useRef();
     
     /* ========== Methods ========== */
     const postPlanHandler = () => {
         const target = {
             complete: false,
+            active: true,
             title: input_plan.current.value,
             comment: "",
             rank: props.rank? props.rank:0,
             parent: props.parent? props.parent:"",
             children: {},
-            seconds: 0
+            seconds: 0,
         }
         
         axios.post(`/plans.json`, target)
         .then(response => {
-            console.log("post")
             console.log(response)
+            const new_id = response.data.name
             
+            props.g_state.plans[new_id]=target
+            props.g_state.active_plans[new_id]=true
             axios.put(`/active_plans/${response.data.name}.json`, true)
             .then(response =>{
                 console.log(response)
@@ -52,25 +43,33 @@ const NewPlanForm = (props) => {
             })
             
             // update parent's children
-            if (props.parent)  axios.put(`/plans/${props.parent}/children/${response.data.name}.json`, true)
+            if (props.parent)  {
+            const parent_plan = props.g_state.plans[props.parent]
+            if (!parent_plan.children) parent_plan.children={}
+            parent_plan.children[new_id]=true
+            
+            axios.put(`/plans/${props.parent}/children/${response.data.name}.json`, true)
             .then(response =>{
                 console.log(response)
             })
             .catch(error => {
                 console.log(error)
             })
+            }
+            props.g_state.plans_element.updateTrigger()
         })
         .catch(error => {
             console.log(error)
         })
+        props.form_toggler()
     }
     
     return(
-        <form className={classes.control}>
+        <div className={classes.control}>
             <input type="text" ref={input_plan} />
-            <button onClick={getPlanHandler}>Add</button>
+            <button onClick={postPlanHandler}>Add</button>
             <button onClick={props.form_toggler}>Cancel</button>
-        </form>
+        </div>
     )
     
 

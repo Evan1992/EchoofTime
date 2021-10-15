@@ -21,6 +21,7 @@ class NewPlan extends Component {
                     form_toggler={this.formToggleHandler}
                     parent=""
                     rank={0}
+                    g_state={this.props.g_state}
                 />
             );
         } else {

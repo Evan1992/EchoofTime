@@ -7,14 +7,20 @@ import NewPlan from '../Plans/NewPlan/NewPlan'
 /* ========== import other libraries ========== */
 import axios from '../../axios'
 
+/* ========== import corresponding css ========== */
+import classes from './Plans.module.css'
+
 class Plans extends Component {
     state = {
-        isLoading : true
+        isLoading : true,
+        update: true
     }
     
     g_state = {
         plan_in_progress: null,
-        plan_start_timestamp: 0
+        plan_start_timestamp: 0,
+        plans_element: this,
+        update_trigger: this.updateTrigger
     }
 
     /* ========== Lifecycle ========== */
@@ -47,7 +53,7 @@ class Plans extends Component {
     render() {
         // console.log(`In Render() active_plans ${this.g_state.active_plans}`)
         return(
-            <React.Fragment>
+            <div className={classes.plans}>
                 {/* Render plans with Rank == 0 */
                     this.g_state.active_plans && this.g_state.plans && Object.keys(this.g_state.active_plans).map(item=>
                         <Plan g_state={this.g_state} id={item} key={item}></Plan>
@@ -55,11 +61,14 @@ class Plans extends Component {
                 }
                 
                 <NewPlan g_state={this.g_state}/>
-            </React.Fragment>
+            </div>
         )
     }
 
     /* ========== Methods ========== */
+    updateTrigger(){
+        this.setState({update:true})
+    }
 }
 
 export default Plans

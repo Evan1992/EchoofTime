@@ -18,9 +18,9 @@ class Plan extends Component {
         // console.log(`Render ${this.id}`)
         if (!data) return null
         return(
-            <div >
+            <ul className={classes.tree_list}>
             {/* Render itself */}
-                <div className={classes.plan}>
+                <div className={classes.tree_row}>
                     <div className={classes.plan_left_button} onClick={this.childrenToggleHandler}>
                         {/* Render the icon conditionally based on the state show_children using ternary operator */}
                         {!this.state.show_children === true ? 
@@ -31,13 +31,13 @@ class Plan extends Component {
                     <div className={classes.plan_title}>{data.title || 'No title'}</div>
                     <div className={classes.plan_seconds}>{data.seconds || '0'}</div>
                     <div className={classes.plan_right_buttons}>
-                        <img className={classes.plan_clock_button} src="https://img.icons8.com/ios-glyphs/30/000000/--pocket-watch.png" alt=''/>
+                        <img className={classes.plan_clock_button} onClick={this.clockToggleHandler} src="https://img.icons8.com/ios-glyphs/30/000000/--pocket-watch.png" alt=''/>
                         <div className={classes.plan_add_button} onClick={this.formToggleHandler}>+</div>
                     </div>
                 </div>
             {/* Render children plans */
                 this.state.show_children && data.children && Object.keys(data.children).map(item=>
-                        <Plan className={classes.child_task} g_state={this.g_state} id={item} key={item}></Plan>
+                        <li className={classes.tree_item} key={item}><Plan className={classes.child_task} g_state={this.g_state} id={item} key={item}></Plan></li>
                 )
             }
             
@@ -46,10 +46,11 @@ class Plan extends Component {
                     form_toggler={this.formToggleHandler}
                     parent={this.id}
                     rank={data.rank+1}
+                    g_state={this.props.g_state}
                 />
             }
             
-            </div>
+            </ul>
         )
     }
     
@@ -66,6 +67,7 @@ class Plan extends Component {
         const now = Math.floor(Date.now()/1000)
         if (this.g_state.plan_in_progress){
             // end current plan
+            console.log(`End current timer.`)
             const duration = now - this.g_state.plan_start_timestamp
             this.updatePlanTimer(this.g_state.plan_in_progress, duration)
         }
@@ -73,18 +75,22 @@ class Plan extends Component {
             // end this plan
             this.g_state.plan_in_progress = null
         } else {
+            console.log(`Start new timer.`)
             this.g_state.plan_in_progress = this.id
             this.g_state.plan_start_timestamp = now
         }
+        
+        this.g_state.plans_element.updateTrigger()
     }
     
-    updatePlanTimer(id, duration){
-        console.log(`Start new timer.`)
+    updatePlanTimer = (id, duration) => {
+        console.log(`Update plans.`)
         while(id){
             const plan = this.g_state.plans[id]
             if (!plan) break
             const new_seconds = this.g_state.plans[id].seconds + duration
-            axios.post(`/plans/${id}/seconds.json`, new_seconds)
+            plan.seconds = new_seconds
+            axios.put(`/plans/${id}/seconds.json`, new_seconds)
                 .then(response => {
                     console.log(response)
                 })
