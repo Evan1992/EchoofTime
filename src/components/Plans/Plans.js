@@ -22,26 +22,35 @@ class Plans extends Component {
         plans_element: this,
         update_trigger: this.updateTrigger
     }
+    
+    root_id=`root_plan`
+    
+    root_plan={
+        children:{},
+        seconds:0,
+        rank:-1
+    }
 
     /* ========== Lifecycle ========== */
     componentDidMount() {
-        axios.get(`/active_plans.json`)
-        .then(response => {
-            if(response.data != null) {
-                console.log(response)
-                this.g_state.active_plans=response.data
-                this.setState({isLoading:false})
-            }
-        })
-        .catch(error => {
-            console.log(error)
-        })
-        
+
         axios.get(`/plans.json`)
         .then(response => {
             if(response.data != null) {
                 console.log(response)
                 this.g_state.plans=response.data
+                const new_root_plan = this.g_state.plans[this.root_id]
+                if (new_root_plan){
+                    this.root_plan = new_root_plan
+                } else {
+                    axios.put(`/plans/${this.root_id}.json`, this.root_plan)
+                        .then(response=>{
+                            console.log(`New root plan`)
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                }
                 this.setState({isLoading:false})
             }
         })
@@ -51,16 +60,15 @@ class Plans extends Component {
     }
     
     render() {
-        // console.log(`In Render() active_plans ${this.g_state.active_plans}`)
         return(
             <div className={classes.plans}>
                 {/* Render plans with Rank == 0 */
-                    this.g_state.active_plans && this.g_state.plans && Object.keys(this.g_state.active_plans).map(item=>
+                    this.root_plan.children && Object.keys(this.root_plan.children).map(item=>
                         <Plan g_state={this.g_state} id={item} key={item}></Plan>
                     )
                 }
                 
-                <NewPlan g_state={this.g_state}/>
+                <NewPlan g_state={this.g_state} rank={0} root_id={this.root_id}/>
             </div>
         )
     }

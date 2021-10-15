@@ -19,8 +19,8 @@ class NewPlan extends Component {
             return (
                 <NewPlanForm
                     form_toggler={this.formToggleHandler}
-                    parent=""
-                    rank={0}
+                    parent={this.props.root_id}
+                    rank={this.props.rank}
                     g_state={this.props.g_state}
                 />
             );

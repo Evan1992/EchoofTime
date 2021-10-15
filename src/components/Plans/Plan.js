@@ -23,9 +23,9 @@ class Plan extends Component {
                 <div className={classes.tree_row}>
                     <div className={classes.plan_left_button} onClick={this.childrenToggleHandler}>
                         {/* Render the icon conditionally based on the state show_children using ternary operator */}
-                        {!this.state.show_children === true ? 
+                        {data.children && Object.keys(data.children).length > 0 &&(!this.state.show_children ? 
                             <img className={classes.plan_left_button_img} src='expand.png' alt=''/> :
-                            <img className={classes.plan_left_button_img} src='shrink.png' alt=''/> 
+                            <img className={classes.plan_left_button_img} src='shrink.png' alt=''/>)
                         }
                     </div>
                     <div className={classes.plan_title}>{data.title || 'No title'}</div>

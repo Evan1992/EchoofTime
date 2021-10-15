@@ -33,14 +33,6 @@ const NewPlanForm = (props) => {
             const new_id = response.data.name
             
             props.g_state.plans[new_id]=target
-            props.g_state.active_plans[new_id]=true
-            axios.put(`/active_plans/${response.data.name}.json`, true)
-            .then(response =>{
-                console.log(response)
-            })
-            .catch(error => {
-                console.log(error)
-            })
             
             // update parent's children
             if (props.parent)  {
