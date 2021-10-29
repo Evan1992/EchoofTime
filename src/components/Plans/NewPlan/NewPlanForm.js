@@ -24,6 +24,7 @@ const NewPlanForm = (props) => {
             rank: props.rank? props.rank:0,
             parent: props.parent? props.parent:"",
             children: {},
+            date: "",
             seconds: 0,
         }
         

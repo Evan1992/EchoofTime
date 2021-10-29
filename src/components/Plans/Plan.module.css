@@ -9,7 +9,7 @@
 }
 
 .tree_row{
-    
+    display: grid-row;
     width: 100%;
     height: 30px;
     /*margin-left: 20%;*/
@@ -18,40 +18,18 @@
 
 .plan_title {
     float:left;
-    width:60%;
+    /*width:60%;*/
 }
 
 .plan_seconds {
     float:left;
-    width:10%;
+    width:200px;
     color: gray;
 }
 
-.plan_right_buttons{
-    float:right;
-}
-
-.plan_clock_button{
-    vertical-align: middle;
-    width:15px;
-    height:15px;
-}
-
-.plan_clock_button:hover{
-    width:20px;
-    height:20px;
-}
-
-.plan_add_button{
-    float:right;
-    color: gray;
-}
-
-.plan_left_button{
+.plan_date {
     float:left;
     color: gray;
-    width: 20px;
-    height: 20px;
 }
 
 .plan_left_button_img{
@@ -61,7 +39,69 @@
 
 .plan_left_button_img:hover{
     filter: opacity(0.3);
-    width: 45%;
-    height: 45%;
+    transform: scale(1.8);
 }
 
+.plan_right_buttons{
+    float:right;
+}
+
+.plan_clock_button{
+    vertical-align: middle;
+    width:20px;
+    height:20px;
+}
+
+.plan_clock_button:hover{
+    transform: scale(1.8);
+}
+
+.plan_add_button{
+    float:right;
+    color: gray;
+}
+.plan_add_button:hover{
+    transform: scale(1.8);
+}
+
+.plan_left_button{
+    float:left;
+    color: gray;
+    width: 20px;
+    height: 20px;
+}
+
+.check_icon{
+    float:left;
+    width: 15px;
+    height: 15px;
+    padding-top: 3px;
+}
+
+.check_icon_img{
+    width: 100%;
+    height: 100%;
+}
+
+.check_icon_img:hover{
+    filter: opacity(0.3);
+    transform: scale(1.5);
+}
+
+.plan_calendar{
+    position:fixed;
+    right: 0;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.plan_calendar_icon {
+    vertical-align: middle;
+    width:20px;
+    height:20px;
+}
+
+.plan_calendar_icon:hover {
+    filter: opacity(0.3);
+    transform: scale(1.5);
+}

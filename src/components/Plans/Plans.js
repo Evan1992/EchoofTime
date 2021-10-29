@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 /* ========== import react components ========== */
 import Plan from './Plan'
 import NewPlan from '../Plans/NewPlan/NewPlan'
+import Timer from '../Timer/Timer'
 
 /* ========== import other libraries ========== */
 import axios from '../../axios'
+import {secondsToHour} from '../Utils/Utils'
 
 /* ========== import corresponding css ========== */
 import classes from './Plans.module.css'
@@ -20,7 +22,7 @@ class Plans extends Component {
         plan_in_progress: null,
         plan_start_timestamp: 0,
         plans_element: this,
-        update_trigger: this.updateTrigger
+        timer: null
     }
     
     root_id=`root_plan`
@@ -62,6 +64,8 @@ class Plans extends Component {
     render() {
         return(
             <div className={classes.plans}>
+                <div> You have logged {secondsToHour(this.root_plan.seconds)} </div>
+                <Timer g_state={this.g_state}/>
                 {/* Render plans with Rank == 0 */
                     this.root_plan.children && Object.keys(this.root_plan.children).map(item=>
                         <Plan g_state={this.g_state} id={item} key={item}></Plan>
@@ -77,6 +81,33 @@ class Plans extends Component {
     updateTrigger(){
         this.setState({update:true})
     }
+    
+    updateGState(key, value){
+        console.log(`Update global value ${key} = ${value}`)
+        this.g_state[key]=value
+        this.putDatabase(`/g_state/${key}.json`, value)
+    }
+    
+    updatePlanAttr(id, attr, value){
+        this.g_state.plans[id][attr]=value
+        this.putDatabase(`/plans/${id}/${attr}.json`, value)
+    }
+    
+    putDatabase(path, target){
+        if (this.isString(target)) target = `"${target}"`
+        axios.put(path, target)
+            .then(response=>{
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+    
+    isString(x){
+        return typeof x === 'string' || x instanceof String
+    }
+    
 }
 
 export default Plans
