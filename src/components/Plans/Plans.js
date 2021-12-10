@@ -4,10 +4,15 @@ import React, { Component } from 'react';
 import Plan from './Plan'
 import NewPlan from '../Plans/NewPlan/NewPlan'
 import Timer from '../Timer/Timer'
+import TodayPlans from './TodayPlans/TodayPlans'
 
 /* ========== import other libraries ========== */
 import axios from '../../axios'
 import {secondsToHour} from '../Utils/Utils'
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* ========== import corresponding css ========== */
 import classes from './Plans.module.css'
@@ -19,10 +24,12 @@ class Plans extends Component {
     }
     
     g_state = {
+        today_plans:{},
         plan_in_progress: null,
         plan_start_timestamp: 0,
         plans_element: this,
-        timer: null
+        timer: null,
+        plan_promise: null
     }
     
     root_id=`root_plan`
@@ -36,8 +43,8 @@ class Plans extends Component {
     /* ========== Lifecycle ========== */
     componentDidMount() {
 
-        axios.get(`/plans.json`)
-        .then(response => {
+        this.g_state.plan_promise = axios.get(`/plans.json`);
+        this.g_state.plan_promise.then(response => {
             if(response.data != null) {
                 console.log(response)
                 this.g_state.plans=response.data
@@ -66,11 +73,14 @@ class Plans extends Component {
             <div className={classes.plans}>
                 <div> You have logged {secondsToHour(this.root_plan.seconds)} </div>
                 <Timer g_state={this.g_state}/>
-                {/* Render plans with Rank == 0 */
-                    this.root_plan.children && Object.keys(this.root_plan.children).map(item=>
-                        <Plan g_state={this.g_state} id={item} key={item}></Plan>
-                    )
-                }
+                {this.g_state.plans && <TodayPlans g_state={this.g_state}/>}
+                <Container fluid>
+                    {/* Render plans with Rank == 0 */
+                        this.root_plan.children && Object.keys(this.root_plan.children).map(item=>
+                            <Plan g_state={this.g_state} id={item} key={item}></Plan>
+                        )
+                    }
+                </Container>
                 
                 <NewPlan g_state={this.g_state} rank={0} root_id={this.root_id}/>
             </div>

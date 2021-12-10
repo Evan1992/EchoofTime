@@ -105,3 +105,8 @@
     filter: opacity(0.3);
     transform: scale(1.5);
 }
+
+.placeholder{
+    width: 20px;
+    height: 20px;
+}
