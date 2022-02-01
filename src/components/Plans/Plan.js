@@ -5,6 +5,7 @@ import Backdrop from '../UI/Backdrop'
 import classes from './Plan.module.css'
 import Calendar from 'react-calendar';
 import TimeRange from '../TimeRange/TimeRange';
+import Timer from '../Timer/Timer'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -27,9 +28,11 @@ class Plan extends Component {
     
     g_state=this.props.g_state
     id = this.props.id
+    timer = null
     
     /* ========== Lifecycle ========== */
     componentDidMount() {
+        this.g_state.plan_components[this.id] = this;
         const data = this.g_state.plans[this.id];
         if (!data) return;
         if (!data.expected_seconds) data.expected_seconds = 0;
@@ -75,7 +78,7 @@ class Plan extends Component {
                     </Col>
                     
                     <Col xs={2}>
-                        {data.seconds != null ? secondsToHHMMSS(data.seconds) : '0'}
+                        <Timer seconds={data.seconds} plan_component={this} />
                     </Col>
                     
                     <Col xs={1}>
@@ -118,8 +121,8 @@ class Plan extends Component {
                                 <Col xs={{ span: 5}} style={{display:'flex', justifyContent:'left'}}>
                                     <NewPlanForm
                                         form_toggler={this.formToggleHandler}
-                                        parent={this.props.root_id}
-                                        rank={this.props.rank}
+                                        parent={this.id}
+                                        rank={data.rank+1}
                                         g_state={this.props.g_state}
                                     />
                                 </Col>
@@ -166,9 +169,19 @@ class Plan extends Component {
             this.g_state.plans_element.updateGState("plan_in_progress",this.id)
             this.g_state.plans_element.updateGState("plan_start_timestamp",now)
             this.g_state.timer.start_timer()
+            this.startTimerRecursively(this.id)
         }
         
         this.g_state.plans_element.updateTrigger()
+    }
+    
+    startTimerRecursively(id){
+        while(id){
+            const plan_component = this.g_state.plan_components[id];
+            if (!plan_component) break
+            if (plan_component.timer) plan_component.timer.start_timer();
+            id = this.g_state.plans[id].parent
+        }
     }
     
     calendarToggleHandler = () => {
@@ -180,55 +193,62 @@ class Plan extends Component {
         while(id){
             const plan = this.g_state.plans[id]
             if (!plan) break
+            // pause timer
+            const plan_component = this.g_state.plan_components[id];
+            if (plan_component && plan_component.timer) plan_component.timer.pause_timer();
+            
             const new_seconds = this.g_state.plans[id].seconds + duration
-            plan.seconds = new_seconds
-            axios.put(`/plans/${id}/seconds.json`, new_seconds)
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+            // plan.seconds = new_seconds
+            this.g_state.plans_element.updatePlanAttr(id, "seconds", new_seconds);
+            // axios.put(`/plans/${id}/seconds.json`, new_seconds)
+            //     .then(response => {
+            //         console.log(response)
+            //     })
+            //     .catch(error => {
+            //         console.log(error)
+            //     })
             
             id = this.g_state.plans[id].parent
         }
     }
     
     dateChangeHandler = (date) => {
-        const month_lookup = new Map();
-        month_lookup.set(0, 'Jan')
-                    .set(1, 'Feb')
-                    .set(2, 'Mar')
-                    .set(3, 'Apr')
-                    .set(4, 'May')
-                    .set(5, 'Jun')
-                    .set(6, 'Jul')
-                    .set(7, 'Aug')
-                    .set(8, 'Sep')
-                    .set(9, 'Oct')
-                    .set(10, 'Nov')
-                    .set(11, 'Dec');
-        const today = new Date()
-        if(date.getDate() === today.getDate()) {
-            this.setState({plan_date: "today"})
-        }else {
-            this.setState({plan_date: month_lookup.get(date.getMonth()) + " " + date.getDate() })
-        }
+        // const month_lookup = new Map();
+        // month_lookup.set(0, 'Jan')
+        //             .set(1, 'Feb')
+        //             .set(2, 'Mar')
+        //             .set(3, 'Apr')
+        //             .set(4, 'May')
+        //             .set(5, 'Jun')
+        //             .set(6, 'Jul')
+        //             .set(7, 'Aug')
+        //             .set(8, 'Sep')
+        //             .set(9, 'Oct')
+        //             .set(10, 'Nov')
+        //             .set(11, 'Dec');
+        // const today = new Date()
+        // if(date.getDate() === today.getDate()) {
+        //     this.setState({plan_date: "today"})
+        // }else {
+        //     this.setState({plan_date: month_lookup.get(date.getMonth()) + " " + date.getDate() })
+        // }
         
         /* update database in format YYYY-MM-DD */
         this.g_state.plans_element.updatePlanAttr(this.id, "date", date.toISOString().slice(0,10))
+        this.g_state.plans_element.updateTrigger();
         
     }
     
     completeHandler = () => {
-        this.g_state.plans[this.id].complete = true;
-        axios.put(`/plans/${this.id}/complete.json`, true)
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+        this.g_state.plans_element.updatePlanAttr(this.id, "complete", true)
+        // this.g_state.plans[this.id].complete = true;
+        // axios.put(`/plans/${this.id}/complete.json`, true)
+        //         .then(response => {
+        //             console.log(response)
+        //         })
+        //         .catch(error => {
+        //             console.log(error)
+        //         })
         this.g_state.plans_element.updateTrigger()
     }
     

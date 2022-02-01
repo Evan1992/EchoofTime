@@ -1,20 +1,21 @@
 
 
 export function secondsToHHMMSS(seconds){
-    const HH = formatTo2((seconds / 3600)>>0)
+    const HH = (seconds / 3600)>>0
     const MM = formatTo2(((seconds%3600)/60)>>0)
     const SS = formatTo2(seconds%60)
     return `${HH}:${MM}:${SS}`
 }
 
 export function secondsToHour(seconds){
-    const HH = (seconds / 3600) >> 0;
-    const MM = ((seconds % 3600) / 60) >> 0;
-    const SS = seconds%60;
+    let HH  = (seconds / 3600) >> 0;
+    let MM  = ((seconds % 3600) / 60) >> 0;
+    let SS  = seconds % 60;
+    
     if (HH>0){
-        return `${HH} hours ${MM} minutes`;
+        return `${HH} hours ${MM} minites`;
     } else {
-        return `${MM} minutes ${SS} seconds`;
+        return `${MM} minites ${SS} seconds`;
     }
 }
 
@@ -40,7 +41,7 @@ const month_lookup = {
 
 
 export function dateToReadable(date_string){
-        if (date_string == '') return '';
+        if (date_string === '') return '';
         const date = new Date(date_string+'T00:00:00');
         if(isToday(date)) {
             return "today";

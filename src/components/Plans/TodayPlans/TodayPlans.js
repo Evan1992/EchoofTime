@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* ========== import components ========== */
-import {dateStringIsToday, secondsToHour} from '../../Utils/Utils'
+import {dateStringIsToday, secondsToHHMMSS} from '../../Utils/Utils'
 
 /* ========== import corresponding css ========== */
 import classes from './TodayPlans.module.css'
@@ -24,28 +24,74 @@ class TodayPlans extends Component {
     
     /* ========== Lifecycle ========== */
     componentDidMount(){
-        this.init_today_plans();
-        this.setState({update:true})
+        // this.init_today_plans();
+        // this.setState({update:true})
     }
     
     
     render(){
+        this.init_today_plans();
+        console.log("logged_seconds is: ", this.state.logged_seconds);
         return (
-            <div className={classes.plans}>
-            <Container>
-            <div>Today's Plans still need {secondsToHour(this.state.expected_seconds - this.state.logged_seconds)}.</div>
-            {Object.keys(this.g_state.today_plans).map(item=>
-                <Row key={item}>
-                <Col xs={1}>{this.g_state.plans[item].title}</Col>
-                </Row>)}        
-            </Container>
+            <div>
+                <Row>
+                    <Col xs={1} />
+                    <Col xs="auto"><div style={{width: '20px'}}></div></Col>
+                    <Col className={classes.title}>Today</Col>
+                </Row>
+                
+                <Row>
+                    <Col xs={1} />
+                    <Col xs="auto"><div style={{width: '20px'}}></div></Col>
+                    <Col xs='auto'>Estimated Time: {secondsToHHMMSS(this.state.expected_seconds)}</Col>
+                </Row>
+                
+                <Row>
+                    <Col xs={1} />
+                    <Col xs="auto"><div style={{width: '20px'}}></div></Col>
+                    <Col xs='auto'>Used Time: {secondsToHHMMSS(this.state.logged_seconds)}</Col>
+                </Row>
+                
+                <Row>
+                    <Col xs={1} />
+                    <Col xs="auto"><div style={{width: '20px'}}></div></Col>
+                    <Col xs='auto'>Still Need: {secondsToHHMMSS(this.state.expected_seconds - this.state.logged_seconds)}</Col>
+                </Row>
+                
+    
+                {Object.keys(this.g_state.today_plans).map(item=>
+                    <Row key={item}>
+                    <Col xs={1} />
+                    <Col xs="auto"><div style={{width: '30px'}}></div></Col>
+                    <Col xs={1}>{this.g_state.plans[item].title}</Col>
+                    </Row>)}        
             </div>
             
         )
+        
+            // <div>You have logged {secondsToHHMMSS(this.state.logged_seconds)}.</div>
+            // <div>Expected spent time: Today's Plans still need {secondsToHHMMSS(this.state.expected_seconds - this.state.logged_seconds)}.</div>
 
     }
 
     /* ========== Methods ========== */
+    
+    dfs(today_plans, id){
+        const plan = this.g_state.plans[id];
+        if (plan && !plan.complete){
+            if (plan.date && dateStringIsToday(plan.date)){
+                today_plans[id] = true;
+            } else {
+                if (plan.child_id){
+                    for (const key of Object.keys(plan.children)){
+                        this.dfs(today_plans, key);
+                    }
+                }
+            }
+        }
+    }
+    
+    
     init_today_plans(){
         var seconds = 0;
         this.g_state.today_plans = {};
@@ -56,9 +102,9 @@ class TodayPlans extends Component {
             }
         }
         
-        this.setState({expected_seconds: seconds});
+        this.state.expected_seconds=seconds;
         this.update_logged_seconds();
-        console.log(`Today's plans = ${Object.keys(this.g_state.today_plans).length}`);
+        // console.log(`Today's plans = ${Object.keys(this.g_state.today_plans).length}`);
     }
     
     update_logged_seconds(){
@@ -66,7 +112,7 @@ class TodayPlans extends Component {
         for (const id of Object.keys(this.g_state.today_plans)){
             seconds = seconds + this.g_state.plans[id].seconds;
         }
-        this.setState({logged_seconds:seconds});
+        this.state.logged_seconds=seconds;
     }
 }
 

@@ -1,30 +1,48 @@
-import './App.css';
-import Plans from './components/Plans/Plans'
+import { useContext } from 'react';
+import { BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
+
+import Layout from './components/Layout/Layout';
+import Plans from './components/Plans/Plans';
+import HomePage from './pages/HomePage';
+import AuthPage from './pages/AuthPage';
+import AuthContext from './store/auth-context';
 
 function App() {
-  // return (
-  //   <div className="App">
-  //     <header className="App-header">
-  //       <img src={logo} className="App-logo" alt="logo" />
-  //       <p>
-  //         Edit <code>src/App.js</code> and save to reload.
-  //       </p>
-  //       <a
-  //         className="App-link"
-  //         href="https://reactjs.org"
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //       >
-  //         Learn React
-  //       </a>
-  //     </header>
-  //   </div>
-  // );
-
+  const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
   return (
-    <div className="App">
-      <Plans />
-    </div>
+    <BrowserRouter>
+      <Layout>
+        <Switch>
+          {!isLoggedIn && (
+            <Route path='/' exact>
+              <HomePage />
+            </Route>
+          )}
+          
+          {!isLoggedIn && (
+            <Route path='/auth'>
+              <AuthPage />
+            </Route>
+          )}
+          
+          {isLoggedIn && (
+            <Route path='/plans'>
+              <div className="App">
+                <Plans />
+              </div>
+            </Route>
+          )}
+          
+          <Route path='*'>
+            <Redirect to='/' />
+          </Route>
+        </Switch>
+      </Layout>
+    </BrowserRouter>
+    
+    
+    
   );
 }
 

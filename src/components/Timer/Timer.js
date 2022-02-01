@@ -8,24 +8,26 @@ import {secondsToHHMMSS} from '../Utils/Utils'
 class Timer extends Component {
  
     state = {
-        seconds:0,
-        plan_title:"NULL"
+        seconds:this.props.seconds? this.props.seconds:0
     }
     
     interval = null
-    plan_title = ""
-    g_state = this.props.g_state
     
     componentDidMount(){
-        this.props.g_state.timer=this
+        this.props.plan_component.timer = this;
+    }
+    
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.seconds !== this.state.seconds) {
+        this.setState({seconds: nextProps.seconds});
+      }
     }
     
     render(){
         return(
             <div>
-                Current Plan: {this.state.plan_title} Time: {secondsToHHMMSS(this.state.seconds)}
+                {secondsToHHMMSS(this.state.seconds)}
             </div>
-        
         )
     }
     
@@ -38,15 +40,26 @@ class Timer extends Component {
         if (this.interval) {
             clearInterval(this.interval)
         }
-        this.setState({seconds:0, plan_title:"NULL"})
+        this.setState({seconds:0})
     }
     
+    pause_timer(){
+        console.log(`Timer paused`)
+        if (this.interval) {
+            clearInterval(this.interval)
+        }
+    }
+    
+    set_seconds(n){
+        this.setState({seconds:n})
+    }
+    
+    get_seconds(){
+        return this.state.seconds;
+    }
     
     start_timer(){
-        console.log(`Timer start`)
-        const plan_id = this.g_state.plan_in_progress
-        const plan_title = this.g_state.plans[plan_id].title
-        this.setState({plan_title:plan_title})
+        console.log(`Timer started`)
         this.interval = setInterval(() => this.tick(), 1000)
     }
     

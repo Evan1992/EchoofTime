@@ -28,32 +28,33 @@ const NewPlanForm = (props) => {
             seconds: 0,
         }
         
-        axios.post(`/plans.json`, target)
-        .then(response => {
-            console.log(response)
-            const new_id = response.data.name
+        props.g_state.plans_element.addNewPlan(target);
+        // axios.post(`/plans.json`, target)
+        // .then(response => {
+        //     console.log(response)
+        //     const new_id = response.data.name
             
-            props.g_state.plans[new_id]=target
+        //     props.g_state.plans[new_id]=target
             
-            // update parent's children
-            if (props.parent)  {
-            const parent_plan = props.g_state.plans[props.parent]
-            if (!parent_plan.children) parent_plan.children={}
-            parent_plan.children[new_id]=true
+        //     // update parent's children
+        //     if (props.parent)  {
+        //     const parent_plan = props.g_state.plans[props.parent]
+        //     if (!parent_plan.children) parent_plan.children={}
+        //     parent_plan.children[new_id]=true
             
-            axios.put(`/plans/${props.parent}/children/${response.data.name}.json`, true)
-            .then(response =>{
-                console.log(response)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            }
-            props.g_state.plans_element.updateTrigger()
-        })
-        .catch(error => {
-            console.log(error)
-        })
+        //     axios.put(`/plans/${props.parent}/children/${response.data.name}.json`, true)
+        //     .then(response =>{
+        //         console.log(response)
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //     })
+        //     }
+        //     props.g_state.plans_element.updateTrigger()
+        // })
+        // .catch(error => {
+        //     console.log(error)
+        // })
         props.form_toggler()
     }
     
