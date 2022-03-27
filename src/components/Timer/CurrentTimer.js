@@ -26,16 +26,16 @@ class CurrentTimer extends Component {
     render(){
         return(
             <div>
-            <Row>
+                <Row>
                     <Col xs={1} />
                     <Col xs="auto"><div style={{width: '20px'}}></div></Col>
                     <Col>Current Plan: {this.state.plan_title}</Col>
-            </Row>
-            <Row>
+                </Row>
+                <Row>
                     <Col xs={1} />
                     <Col xs="auto"><div style={{width: '20px'}}></div></Col>
-                    <Col>New Time: {secondsToHHMMSS(this.state.seconds)}</Col>
-            </Row>
+                    <Col>Current Period: {secondsToHHMMSS(this.state.seconds)}</Col>
+                </Row>
             </div>
         
         )

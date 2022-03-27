@@ -43,9 +43,11 @@ const month_lookup = {
 export function dateToReadable(date_string){
         if (date_string === '') return '';
         const date = new Date(date_string+'T00:00:00');
-        if(isToday(date)) {
+        if(date - today == 0) {
             return "today";
-        }else {
+        } else if (date - today == 86400000){
+            return "tomorrow"
+        } else {
             return month_lookup[date.getMonth()] + " " + date.getDate();
         }
     }
@@ -61,8 +63,16 @@ export function isToday(date){
     return isSameDay(date, today);
 }
 
+const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+const today_string = (new Date(Date.now() - tzoffset)).toISOString().slice(0,10);
+const today = new Date(today_string+'T00:00:00');
+
 export function dateStringIsToday(date_string){
-    const today = new Date();
     const date = new Date(date_string+'T00:00:00');
-    return isSameDay(date, today);
+    return date - today == 0;
+}
+
+export function dateStringIsTomorrow(date_string){
+    const date = new Date(date_string+'T00:00:00');
+    return date - today == 86400000;
 }

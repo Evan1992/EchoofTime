@@ -55,13 +55,13 @@ class Plan extends Component {
                         <div className={classes.plan_left_button} onClick={this.childrenToggleHandler}>
                             {/* Ternary expression: render the icon conditionally based on the state show_children using ternary operator */}
                             {data.children && Object.keys(data.children).length > 0 &&(!this.state.show_children ? 
-                                <img className={classes.plan_left_button_img} src='expand.png' alt=''/> :
-                                <img className={classes.plan_left_button_img} src='shrink.png' alt=''/>)
+                                <img className={classes.plan_left_button_img} src='https://img.icons8.com/material-rounded/24/000000/more-than.png' alt='' /> :
+                                <img className={classes.plan_left_button_img} src='https://img.icons8.com/ios-filled/50/000000/collapse-arrow.png'  alt=''/>)
                             }
                         </div>
                     </Col>
                 
-                    <Col xs={{ span: 3}} style={{display:'flex', justifyContent:'left'}}>
+                    <Col xs={{ span: 4}} style={{display:'flex', justifyContent:'left'}}>
                         <div style={{'text-indent':`calc(${data.rank} * 20px)`}}>{data.title || 'No title'}</div>
                     </Col>
                     
@@ -249,6 +249,7 @@ class Plan extends Component {
         //         .catch(error => {
         //             console.log(error)
         //         })
+        
         this.g_state.plans_element.updateTrigger()
     }
     

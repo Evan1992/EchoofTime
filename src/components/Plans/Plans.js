@@ -5,6 +5,7 @@ import Plan from './Plan'
 import NewPlan from '../Plans/NewPlan/NewPlan'
 import CurrentTimer from '../Timer/CurrentTimer'
 import TodayPlans from './TodayPlans/TodayPlans'
+import TomorrowPlans from './TomorrowPlans/TomorrowPlans'
 
 /* ========== import other libraries ========== */
 import axios from '../../axios'
@@ -97,6 +98,10 @@ class Plans extends Component {
                 
                 <Container fluid className={classes.container}>
                     {this.g_state.plans && <TodayPlans g_state={this.g_state}/>}
+                </Container>
+                
+                <Container fluid className={classes.container}>
+                    {this.g_state.plans && <TomorrowPlans g_state={this.g_state}/>}
                 </Container>
             </div>
         )

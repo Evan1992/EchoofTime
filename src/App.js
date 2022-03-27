@@ -34,10 +34,12 @@ function App() {
             </Route>
           )}
           
-          <Route path='*'>
-            <Redirect to='/' />
-          </Route>
-        </Switch>
+          {
+          //<Route path='*'>
+            //<Redirect to='/' />
+          //</Route>
+          }
+        </Switch>   
       </Layout>
     </BrowserRouter>
     
